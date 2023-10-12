@@ -1,19 +1,20 @@
 // External Dependencies
 import { MongoClient, Db, Collection } from "mongodb";
 
-const { MONGO_HOST, MONGO_USER, MONGO_PASS } = process.env;
+const { MONGO_HOST, MONGO_USER, MONGO_PASS, MONGO_DATABASE } = process.env;
 // Global Variables
 export const collections: { worlds?: Collection } = {}
 const dbConfig = {
     url: `mongodb://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}`,
-    database: 'space',
+    database: MONGO_DATABASE || 'space',
     collection: 'worlds',
 }
+let client: MongoClient;
 // Initialize Connection
 export async function connectToDatabase() {
     // dotenv.config();
 
-    const client: MongoClient = new MongoClient(dbConfig.url);
+    client = new MongoClient(dbConfig.url);
 
     await client.connect();
 
@@ -24,4 +25,8 @@ export async function connectToDatabase() {
     collections.worlds = worldsCollection;
 
     console.log(`Successfully connected to database: ${dbConfig.database} and collection: ${dbConfig.collection}`);
+}
+export async function disconnect() {
+    await client.close();
+    console.log(`closed database connection`);
 }

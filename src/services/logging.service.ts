@@ -15,7 +15,7 @@ const toISOLocal = (d: Date) => {
     const hour = pad2(d.getHours());
     const min = pad2(d.getMinutes());
     const ms = pad3(d.getMilliseconds());
-    return `${year}-${month}-${day} ${hour}}:${min}.${ms}`;
+    return `${year}-${month}-${day} ${hour}:${min}.${ms}`;
 }
 
 const opts: LoggerOptions = {

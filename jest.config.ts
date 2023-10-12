@@ -6,9 +6,11 @@ const config: Config.InitialOptions = {
     transform: {
         '^.+\\.tsx?$': 'ts-jest',
     },
+    preset: 'ts-jest',
     setupFiles: [
         'dotenv/config'
     ],
+    testEnvironment: 'node',
     collectCoverage: true
 };
 export default config;
