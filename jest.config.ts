@@ -11,6 +11,13 @@ const config: Config.InitialOptions = {
         'dotenv/config'
     ],
     testEnvironment: 'node',
-    collectCoverage: true
+    collectCoverage: true,
+    coveragePathIgnorePatterns: [
+        '<rootDir>/node_modules/',
+        '<rootDir>/test/',
+        '<rootDir>/dist/'
+    ],
+    modulePathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/dist/'],
+    testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/dist/'],
 };
 export default config;

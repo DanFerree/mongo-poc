@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 dotenv.config();
 import { Server } from 'http'
-import log from './services/logging.service'
+import log from './middleware/logging.middleware'
 import app, { setup, teardown } from './app'
 
 const { APP_PORT } = process.env;

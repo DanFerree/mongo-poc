@@ -1,6 +1,23 @@
 import request from 'supertest';
 import app, { setup, teardown } from '../src/app'
-import testData from './testData';
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import { loadWorlds } from '../src/routes/worlds/worlds.service';
+import testWorlds from './worlds.testdata';
+
+let mongoServer: MongoMemoryServer;
+
+beforeAll(async () => {
+    mongoServer = new MongoMemoryServer();
+    const mongoUri: string = await mongoServer.getUri();
+    process.env.MONGO_URL = mongoUri;
+    await setup();
+    await loadWorlds(testWorlds);
+});
+
+afterAll(async () => {
+    await teardown();
+    await mongoServer.stop();
+});
 
 describe('Integration Tests', function () {
     beforeAll(async () => {
@@ -10,44 +27,13 @@ describe('Integration Tests', function () {
         await teardown();
     })
 
-    describe('POST /worlds', function () {
-        it('successfully inserts all test data', function (done) {
-            Promise.all(
-                testData.worlds.map((world) => {
-                    // const body = JSON.stringify(world);
-                    // console.log(`sending: ${body}`)
-                    return request(app)
-                        .post('/worlds')
-                        .set('Accept', 'application/json')
-                        .set('Content-Type', 'application/json')
-                        .send(world)
-                        // .expect(function (res) {
-                        //     // res.body.id = 'some fixed id';
-                        //     // res.body.name = res.body.name.toLowerCase();
-                        //     console.log(res.body)
-                        // })
-                        .expect('Content-Type', /json/)
-                        .expect(201)
-                })
-            )
-                .then(() => { done(); })
-                .catch((error) => done(error));
-        });
-    });
+    describe('GET /api-docs', function () {
+        it('should return the swagger documentation', async function () {
+            const res = await request(app)
+                .get('/api-docs')
+                .expect(200);
 
-    describe('GET /worlds', function () {
-        it('responds with json', function (done) {
-            request(app)
-                .get('/worlds')
-                .set('Accept', 'application/json')
-                .expect(function (res) {
-                    // res.body.id = 'some fixed id';
-                    // res.body.name = res.body.name.toLowerCase();
-                    console.log(res.body)
-                })
-                .expect('Content-Type', /json/)
-                .expect(200, done)
-            // .catch((error) => console.log(error));
+            expect(res.body).toHaveProperty('openapi', '3.0.3');
         });
     });
 

@@ -1,10 +1,10 @@
 import express from 'express'
-import { worldsRouter } from "./routes/worlds.router";
+import worldsRouter from "./routes/worlds/worlds.router";
 import cors from 'cors'
-import { connectToDatabase, disconnect } from "./services/database.service"
-
+import { connectDatabase, disconnectDatabase } from "./services/database.service"
+import { errorHandler } from "./middleware/errors.middleware";
 export async function teardown() {
-    await disconnect();
+    await disconnectDatabase();
 }
 
 export async function setup() {
@@ -14,7 +14,7 @@ export async function setup() {
             throw new Error(`${varName} is a required env var to start!!!`);
     });
     try {
-        await connectToDatabase();
+        await connectDatabase();
     } catch (error) {
         throw new Error('Connection to database failed: ' + error)
     }
@@ -27,5 +27,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/worlds", worldsRouter);
+
+app.use(errorHandler);
 
 export default app;
