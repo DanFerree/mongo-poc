@@ -23,37 +23,48 @@ async function setup() {
     }
 }
 
-// Generate OpenAPI specification
-const options = {
-    definition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'Hello World API',
-            version: '1.0.0',
-        },
-    },
-    apis: ['./routes/*.router.js'], // Specify the path to your route files
-    components: {
-        schemas: {
-            ...errorSchema,
-            ...worldsApi.config.schema,
 
-        }
-    },
-};
-const swaggerSpec = swaggerJsdoc(options);
 
 async function createApp() {
     await setup();
+
     const app = express();
     app.use(cors());
     app.use(express.json());
 
+    // Generate OpenAPI specification
+    const options = {
+        definition: {
+            openapi: '3.0.0',
+            info: {
+                title: 'Hello World API',
+                version: '1.0.0',
+            },
+            components: {
+                schemas: {
+                    ...errorSchema,
+                    ...worldsApi.config.schema,
+                }
+            },
+        },
+        apis: ['./src/routes/*/*.router.js'], // Specify the path to your route files
+    };
+    const swaggerSpec = swaggerJsdoc(options);
+
     // Serve the Swagger UI at /api-docs
+    app.get('/api-docs.json', (_req, res) => {
+        res.setHeader('Content-Type', 'application/json');
+        res.send(swaggerSpec);
+    });
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+    app.get('/', (_req, res) => {
+        res.redirect('/api-docs/');
+    });
 
     app.use(worldsApi.config.baseUrl, worldsApi.router);
+
     app.use(errorHandler);
+
     return app;
 }
 

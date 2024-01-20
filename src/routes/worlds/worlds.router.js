@@ -7,6 +7,7 @@ const { BadRequestError } = require("../../middleware/errors.middleware");
 // Global Config
 const worldsRouter = express.Router();
 
+// Search - GET /worlds
 /**
  * @swagger
  * /worlds:
@@ -32,7 +33,6 @@ const worldsRouter = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/WorldList'
  */
-// Search - GET /worlds
 worldsRouter.get("/", async (req, res, next) => {
     // log.debug(`GET /worlds: ${JSON.stringify(req.query)}`);
     try {
@@ -51,6 +51,7 @@ worldsRouter.get("/", async (req, res, next) => {
     }
 });
 
+// Read - GET /worlds/:id
 /**
  * @swagger
  * /worlds/{id}:
@@ -72,7 +73,6 @@ worldsRouter.get("/", async (req, res, next) => {
  *             schema:
  *               $ref: '#/components/schemas/World'
  */
-// Read - GET /worlds/:id
 worldsRouter.get("/:id", async (req, res, next) => {
     const { id } = req.params;
     log.debug(`GET /worlds/${id}}`);
@@ -86,6 +86,7 @@ worldsRouter.get("/:id", async (req, res, next) => {
     }
 });
 
+// Create - POST /worlds
 /**
  * @swagger
  * /worlds:
@@ -106,7 +107,6 @@ worldsRouter.get("/:id", async (req, res, next) => {
  *             schema:
  *               $ref: '#/components/schemas/World'
  */
-// Create - POST /worlds
 worldsRouter.post("/", async (req, res, next) => {
     log.debug(`POST /worlds: ${JSON.stringify(req.body)}`);
     try {
@@ -125,6 +125,7 @@ worldsRouter.post("/", async (req, res, next) => {
     }
 });
 
+// Update - PUT /worlds/:id
 /**
  * @swagger
  * /worlds/{id}:
@@ -152,7 +153,6 @@ worldsRouter.post("/", async (req, res, next) => {
  *             schema:
  *               $ref: '#/components/schemas/World'
  */
-// Update - PUT /worlds/:id
 worldsRouter.put("/:id", async (req, res, next) => {
     const id = req?.params?.id;
     log.debug(`PUT /worlds/${id}: ${JSON.stringify(req.body)}`);
@@ -171,6 +171,7 @@ worldsRouter.put("/:id", async (req, res, next) => {
     }
 });
 
+// Delete - DELETE /worlds/:id
 /**
  * @swagger
  * /worlds/{id}:
@@ -192,7 +193,6 @@ worldsRouter.put("/:id", async (req, res, next) => {
  *       404:
  *         description: The world with the specified ID does not exist
  */
-// Delete - DELETE /worlds/:id
 worldsRouter.delete("/:id", async (req, res, next) => {
     const id = req?.params?.id;
     log.debug(`DELETE /worlds/${id}`);

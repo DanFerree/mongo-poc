@@ -1,4 +1,5 @@
 const request = require('supertest');
+const stringify = require('json-stringify-safe');
 const { createApp, teardown } = require('../src/app');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const { loadWorlds } = require('../src/routes/worlds/worlds.service');
@@ -22,12 +23,21 @@ afterAll(async () => {
 describe('Integration Tests', function () {
 
     describe('GET /api-docs', function () {
-        it('should return the swagger documentation', async () => {
+        it('should return the swagger documentation web GUI', async () => {
             const res = await request(app)
-                .get('/api-docs')
+                .get('/api-docs/')
                 .expect(200);
+            // console.log(res.text);
 
-            expect(res.body).toHaveProperty('openapi', '3.0.3');
+            expect(res.text).toContain('<div id="swagger-ui"></div>');
+        });
+        it('should return the swagger documentation as json', async () => {
+            const res = await request(app)
+                .get('/api-docs.json')
+                .set('Accept', 'application/json')
+                .expect(200);
+            console.log(stringify(res.body, null, 2));
+            expect(res.body.info.title).toBe('Hello World API');
         });
     });
 
