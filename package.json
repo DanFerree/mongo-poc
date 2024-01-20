@@ -6,9 +6,9 @@
   "scripts": {
     "test": "jest --runInBand ",
     "jestCache": "jest --clearCache ",
-    "dev": "nodemon --env-file=.env src/server.ts",
+    "dev": "nodemon --env-file=.env src/server.js",
     "lint": "npx eslint .",
-    "start": "node --env-file=.env dist/server.js"
+    "start": "node --env-file=.env src/server.js"
   },
   "repository": {
     "type": "git",
