@@ -1,14 +1,14 @@
 // External Dependencies
-import pino, { LoggerOptions } from "pino";
-import pinoCaller from "pino-caller";
+const pino = require("pino");
+const pinoCaller = require("pino-caller");
 
 const { APP_NAME, LOG_LEVEL } = process.env;
 
 const origLevel = LOG_LEVEL || 'info';
 
-const pad2 = (n: number) => n.toString().padStart(2, '0');
-const pad3 = (n: number) => n.toString().padStart(3, '0');
-const toISOLocal = (d: Date) => {
+const pad2 = (n) => n.toString().padStart(2, '0');
+const pad3 = (n) => n.toString().padStart(3, '0');
+const toISOLocal = (d) => {
     const year = d.getFullYear();
     const month = pad2(d.getMonth() + 1);
     const day = pad2(d.getDate());
@@ -18,13 +18,13 @@ const toISOLocal = (d: Date) => {
     return `${year}-${month}-${day} ${hour}:${min}.${ms}`;
 }
 
-const opts: LoggerOptions = {
+const opts = {
     name: APP_NAME,
     level: origLevel,
     timestamp: () => `,"time":"${toISOLocal(new Date())}"`,
     base: undefined, //ignores pid and hostname
     formatters: {
-        level: (label: string) => { return { level: label } }
+        level: (label) => { return { level: label } }
     },
     transport: {
         target: 'pino-pretty',
@@ -32,6 +32,6 @@ const opts: LoggerOptions = {
     }
 }
 
-const log: pino.Logger = pinoCaller(pino(opts), { relativeTo: __dirname });
+const log = pinoCaller(pino(opts), { relativeTo: __dirname });
 
-export default log;
+module.exports = log;

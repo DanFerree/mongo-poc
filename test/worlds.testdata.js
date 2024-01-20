@@ -1,4 +1,4 @@
-export default [
+module.exports = [
     {
         name: 'Mercury',
         diameter: 3032,

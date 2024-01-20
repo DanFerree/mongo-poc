@@ -1,5 +1,5 @@
-import { MongoParseError } from 'mongodb';
-import { connectDatabase } from './database.service';
+const { MongoParseError } = require('mongodb');
+const { connectDatabase } = require('./database.service');
 
 describe('Database Service', () => {
     it('should throw an error if MONGO_URL is invalid', async () => {
@@ -8,6 +8,7 @@ describe('Database Service', () => {
             await connectDatabase();
             throw new Error('Should not reach this point');
         } catch (error) {
+            console.log(`error type: ${typeof error}`);
             expect(error).toBeInstanceOf(MongoParseError);
         }
     });
