@@ -1,3 +1,4 @@
+const stringify = require('json-stringify-safe');
 const log = require('./logging.middleware');
 
 class NotFoundError extends Error {
@@ -50,8 +51,9 @@ class ConflictError extends Error {
     }
 }
 
-const errorHandler = (err, _req, res) => {
-    log.debug(`errorHandler(${JSON.stringify(err)})`);
+// eslint-disable-next-line no-unused-vars
+const errorHandler = (err, _req, res, _next) => {
+    log.debug(`errorHandler(${stringify(err)})`);
     const errBody = {
         code: err.code || 500,
         message: err.message || "Internal Server Error",
@@ -59,7 +61,7 @@ const errorHandler = (err, _req, res) => {
     if (err.detail) {
         errBody.detail = err.detail;
     }
-    log.debug(`error response: ${JSON.stringify(errBody, null, 2)}`);
+    log.debug(`error response: ${stringify(errBody, null, 2)}`);
     res.status(err.code).json(errBody).end();
 };
 

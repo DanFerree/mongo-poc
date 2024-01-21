@@ -4,7 +4,7 @@ const swaggerUi = require('swagger-ui-express');
 const worldsApi = require("./routes/worlds");
 const cors = require('cors');
 const { connectDatabase, disconnectDatabase } = require("./services/database.service");
-const { errorHandler, errorSchema } = require("./middleware/errors.middleware");
+const { errorHandler, errorSchema, NotFoundError } = require("./middleware/errors.middleware");
 
 async function teardown() {
     await disconnectDatabase();
@@ -62,6 +62,12 @@ async function createApp() {
     });
 
     app.use(worldsApi.config.baseUrl, worldsApi.router);
+
+
+    // catch all other routes and return 404
+    app.all('*', () => {
+        throw new NotFoundError('endpoint');
+    });
 
     app.use(errorHandler);
 

@@ -9,7 +9,7 @@ let mongoServer, app;
 
 beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
-    const mongoUri = await mongoServer.getUri();
+    const mongoUri = mongoServer.getUri();
     process.env.MONGO_URL = mongoUri;
     app = await createApp();
     await loadWorlds(testWorlds);
@@ -55,7 +55,7 @@ describe('Worlds API', function () {
                 .post('/worlds')
                 .expect(400);
 
-            expect(res.body.message).toBe('name is a required field');
+            expect(res.body.message).toBe('World name is required');
         });
         it('should return 400 if no name is provided', async () => {
             const newWorld = { type: 'terrestrial' };
@@ -65,7 +65,7 @@ describe('Worlds API', function () {
                 .send(newWorld)
                 .expect(400);
 
-            expect(res.body.message).toBe('name is a required field');
+            expect(res.body.message).toBe('World name is required');
         });
         it('should return 400 if no type is provided', async () => {
             const newWorld = { name: 'New World' };
@@ -75,7 +75,7 @@ describe('Worlds API', function () {
                 .send(newWorld)
                 .expect(400);
 
-            expect(res.body.message).toBe('type is a required field');
+            expect(res.body.message).toBe('World type is required');
         });
         it('should create a new world and return it with an id', async () => {
             const newWorld = { name: 'New World', type: 'terrestrial' };
@@ -119,7 +119,7 @@ describe('Worlds API', function () {
                 .get(`/worlds/${id}`)
                 .expect(404);
 
-            expect(res.body.message).toBe(`World not found: ${id}`);
+            expect(res.body.message).toBe(`World with id: ${id} not found`);
         });
     });
 
@@ -129,7 +129,7 @@ describe('Worlds API', function () {
                 .put('/worlds/:id')
                 .expect(400);
 
-            expect(res.body.message).toBe('name is a required field');
+            expect(res.body.message).toBe('World name is required');
         });
         it('should return 400 if no name is provided', async () => {
             const newWorld = { type: 'terrestrial' };
@@ -139,7 +139,7 @@ describe('Worlds API', function () {
                 .send(newWorld)
                 .expect(400);
 
-            expect(res.body.message).toBe('name is a required field');
+            expect(res.body.message).toBe('World name is required');
         });
         it('should return 400 if no type is provided', async () => {
             const newWorld = { name: 'Error World' };
@@ -149,7 +149,7 @@ describe('Worlds API', function () {
                 .send(newWorld)
                 .expect(400);
 
-            expect(res.body.message).toBe('type is a required field');
+            expect(res.body.message).toBe('World type is required');
         });
         it('should update the world by id', async () => {
             const updatedWorld = { name: 'Updated World', type: 'jovian' };

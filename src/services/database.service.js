@@ -37,12 +37,12 @@ async function connectDatabase() {
 
 // Get Collection
 function getCollection(collectionConfig) {
-    const { dbName, collectionName, indexes } = collectionConfig;
+    const { dbName, collectionName, /*indexes*/ } = collectionConfig;
     const db = client.db(dbName);
     const collection = db.collection(collectionName);
-    indexes.forEach(async (index) => {
-        await collection.createIndex(index);
-    });
+    // indexes.forEach(async (index) => {
+    //     await collection.createIndex(index);
+    // });
     return collection;
 }
 
