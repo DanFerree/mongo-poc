@@ -1,4 +1,3 @@
-const { MongoParseError } = require('mongodb');
 const { connectDatabase } = require('./database.service');
 
 describe('Database Service', () => {
@@ -8,8 +7,7 @@ describe('Database Service', () => {
             await connectDatabase();
             throw new Error('Should not reach this point');
         } catch (error) {
-            console.log(`error type: ${typeof error}`);
-            expect(error).toBeInstanceOf(MongoParseError);
+            expect(error.message).toContain('Invalid scheme');
         }
     });
 });

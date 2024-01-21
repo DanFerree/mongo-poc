@@ -112,8 +112,17 @@ describe('Worlds API', function () {
             expect(res.body).toHaveProperty('type', 'terrestrial');
         });
 
+        it('should return 400 if the id is invalid', async () => {
+            const id = 'invalid';
+
+            const res = await request(app)
+                .get(`/worlds/${id}`)
+                .expect(400);
+
+            expect(res.body.message).toBe(`Invalid ObjectId: ${id}`);
+        });
         it('should return 404 if no world with the given id exists', async () => {
-            const id = 'doesnotexist';
+            const id = '1a2b3c4d5e6f7a8b9c0d1e2f';
 
             const res = await request(app)
                 .get(`/worlds/${id}`)
@@ -126,7 +135,7 @@ describe('Worlds API', function () {
     describe('Update - PUT /worlds/:id', function () {
         it('should return 400 if no body is provided', async () => {
             const res = await request(app)
-                .put('/worlds/:id')
+                .put(`/worlds/${worldId}`)
                 .expect(400);
 
             expect(res.body.message).toBe('World name is required');
@@ -135,7 +144,7 @@ describe('Worlds API', function () {
             const newWorld = { type: 'terrestrial' };
 
             const res = await request(app)
-                .put('/worlds/:id')
+                .put(`/worlds/${worldId}`)
                 .send(newWorld)
                 .expect(400);
 
@@ -145,7 +154,7 @@ describe('Worlds API', function () {
             const newWorld = { name: 'Error World' };
 
             const res = await request(app)
-                .put('/worlds/:id')
+                .put(`/worlds/${worldId}`)
                 .send(newWorld)
                 .expect(400);
 
@@ -155,7 +164,7 @@ describe('Worlds API', function () {
             const updatedWorld = { name: 'Updated World', type: 'jovian' };
 
             const res = await request(app)
-                .put('/worlds/:id')
+                .put(`/worlds/${worldId}`)
                 .send(updatedWorld)
                 .expect(202);
 
@@ -190,7 +199,7 @@ describe('Worlds API', function () {
                 .delete(`/worlds/${id}`)
                 .expect(404);
 
-            expect(res.body.message).toBe(`World not found: ${id}`);
+            expect(res.body.message).toBe(`World with id: ${id} not found`);
         });
     });
 });

@@ -44,7 +44,7 @@ async function getWorld(id) {
     try {
         const result = await worlds.findOne({ _id });
         log.debug(`getWorld(${id}): ${JSON.stringify(result, null, 2)}`)
-        if (result?._id !== _id) throw new NotFoundError(_id, 'World');
+        if (!result?.name) throw new NotFoundError(id, 'World');
         return result;
     } catch (error) {
         if (error instanceof NotFoundError) throw error;
